@@ -17,8 +17,6 @@ class GraphClassifier(nn.Module):
         self.params = params
         self.relation2id = relation2id
 
-
-
         self.relation_list = list(self.relation2id.values())
         self.no_jk = self.params.no_jk
         self.link_mode = 6
@@ -60,27 +58,6 @@ class GraphClassifier(nn.Module):
         u_out_edge = graph.out_edges(u_node, 'all')
         v_in_edge = graph.in_edges(v_node, 'all')
         v_out_edge = graph.out_edges(v_node, 'all')
-
-        print("num nodes:", len(u_node))
-        id2relation = [{v, k} for k, v in self.relation2id.items()]
-        nei_set = list()
-        for i in range(len(u_node)):
-            u_node_i = u_node[i]
-            v_node_i = v_node[i]
-            u_i_in_edge = graph.in_edges(u_node_i, 'all')[2]
-            u_i_out_edge = graph.out_edges(u_node_i, 'all')[2]
-            v_i_in_edge = graph.in_edges(v_node_i, 'all')[2]
-            v_i_out_edge = graph.out_edges(v_node_i, 'all')[2]
-            i_neighbor_edges = torch.cat((u_i_in_edge, u_i_out_edge, v_i_in_edge, v_i_out_edge))
-            i_neighbor_edges = torch.unique(i_neighbor_edges, sorted=False)
-            # one-hop neighbors
-            nei_rels = [graph.edata['type'][eid].cpu().numpy().tolist() for eid in i_neighbor_edges.cpu().numpy().tolist()]
-            # print(set(nei_rels))
-            nei_set.extend(nei_rels)
-        print(set(nei_set))
-        neis = [id2relation[r] for r in list(set(nei_set))]
-        print(neis)
-
 
         edge_mask = self.drop(torch.ones(num_edges))
         edge_mask = edge_mask.repeat(num_nodes, 1)
@@ -199,18 +176,8 @@ class GraphClassifier(nn.Module):
         num_nodes = en_g.number_of_nodes()
         num_edges = en_g.number_of_edges()
 
-        print(en_g.edges())
-        print(en_g.edata['type'])
-        # print(rel_labels)
-        for i in range(en_g.edata['type'].shape[0]):
-            print(en_g.edges()[0][i], en_g.edges()[1][i], en_g.edata['type'][i])
-
         head_ids = (en_g.ndata['id'] == 1).nonzero().squeeze(1)
         tail_ids = (en_g.ndata['id'] == 2).nonzero().squeeze(1)
-        # print(head_ids)
-        # print(tail_ids)
-
-
         rel_edge_ids = (en_g.edata['id'] == 1).nonzero().squeeze(1)
 
         head_node, tail_node = head_ids, tail_ids
@@ -220,7 +187,6 @@ class GraphClassifier(nn.Module):
         v_out_nei = en_g.out_edges(tail_node, 'all')
 
         edge2rel = dict()
-
         for i in range(len(rel_labels)):
             u_node_i = head_node[i]
             v_node_i = tail_node[i]
@@ -233,12 +199,6 @@ class GraphClassifier(nn.Module):
             # print(i_neighbor_edges)
             for eid in i_neighbor_edges.cpu().numpy().tolist():
                 edge2rel[eid] = rel_labels[i]
-
-            # one-hop neighbors
-            nei_rels = [en_g.edata['type'][eid].cpu().numpy().tolist() for eid in i_neighbor_edges.cpu().numpy().tolist()]
-
-            # print(set(nei_rels))
-            # print(i_neighbor_edges.cpu().numpy().tolist())
 
 
         # print('num edges:', num_edges)
@@ -257,7 +217,6 @@ class GraphClassifier(nn.Module):
 
         self.neighbor_edges = neighbor_edges
         self.neighbor_edges2rels = neighbor_edges2rels
-
 
 
 
