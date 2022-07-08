@@ -70,7 +70,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='TransE model')
 
     # Experiment setup params
-    parser.add_argument("--model", type=str, default="TACT_Exp", help="model name")
     parser.add_argument("--expri_name", "-e", type=str, default="default", help="A folder with this name would be created to dump saved models and log files")
     parser.add_argument("--dataset", "-d", type=str, default="Toy", help="Dataset string")
     parser.add_argument("--train_file", "-tf", type=str, default="train", help="Name of file containing training triplets")

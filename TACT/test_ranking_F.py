@@ -12,20 +12,25 @@ import networkx as nx
 import torch
 import numpy as np
 import dgl
-
-
+import torch.nn as nn
 def process_files(files, saved_relation2id, add_traspose_rels):
     '''
     files: Dictionary map of file paths to read the triplets from.
     saved_relation2id: Saved relation2id (mostly passed from a trained model) which can be used to map relations to pre-defined indices and filter out the unknown ones.
     '''
     entity2id = {}
-    relation2id = saved_relation2id
+
+    if saved_relation2id is None:
+        relation2id = {}
+        rel = 0
+    else:
+        relation2id = saved_relation2id
+        rel = len(saved_relation2id.keys())
 
     triplets = {}
 
     ent = 0
-    rel = 0
+    # rel = 0
 
     for file_type, file_path in files.items():
 
@@ -41,9 +46,13 @@ def process_files(files, saved_relation2id, add_traspose_rels):
                 entity2id[triplet[2]] = ent
                 ent += 1
 
+            if triplet[1] not in relation2id:
+                relation2id[triplet[1]] = rel
+                rel += 1
+
             # Save the triplets corresponding to only the known relations
-            if triplet[1] in saved_relation2id:
-                data.append([entity2id[triplet[0]], entity2id[triplet[2]], saved_relation2id[triplet[1]]])
+            if triplet[1] in relation2id:
+                data.append([entity2id[triplet[0]], entity2id[triplet[2]], relation2id[triplet[1]]])
 
         triplets[file_type] = np.array(data)
 
@@ -52,7 +61,7 @@ def process_files(files, saved_relation2id, add_traspose_rels):
 
     # Construct the list of adjacency matrix each corresponding to eeach relation. Note that this is constructed only from the train data.
     adj_list = []
-    for i in range(len(saved_relation2id)):
+    for i in range(len(relation2id)):
         idx = np.argwhere(triplets['graph'][:, 2] == i)
         adj_list.append(ssp.csc_matrix((np.ones(len(idx), dtype=np.uint8), (triplets['graph'][:, 0][idx].squeeze(1), triplets['graph'][:, 1][idx].squeeze(1))), shape=(len(entity2id), len(entity2id))))
 
@@ -375,7 +384,7 @@ def get_rank(neg_links):
     head_target_id = neg_links['head'][1]
 
     if head_target_id != 10000:
-        data = get_subgraphs(head_neg_links, adj_list_, dgl_adj_list_, model_.gnn.max_label_value)
+        data = get_subgraphs(head_neg_links, adj_list_, dgl_adj_list_, params.max_label_value)
         head_scores = model_(data).squeeze(1).detach().numpy()
         head_rank = np.argwhere(np.argsort(head_scores)[::-1] == head_target_id) + 1
     else:
@@ -386,7 +395,7 @@ def get_rank(neg_links):
     tail_target_id = neg_links['tail'][1]
 
     if tail_target_id != 10000:
-        data = get_subgraphs(tail_neg_links, adj_list_, dgl_adj_list_, model_.gnn.max_label_value)
+        data = get_subgraphs(tail_neg_links, adj_list_, dgl_adj_list_, params.max_label_value)
         tail_scores = model_(data).squeeze(1).detach().numpy()
         tail_rank = np.argwhere(np.argsort(tail_scores)[::-1] == tail_target_id) + 1
     else:
@@ -416,45 +425,107 @@ def save_negative_triples_to_file(neg_triplets, id2entity, id2relation):
 def main(params):
     model = torch.load(params.model_path, map_location='cpu')
     model.params.gpu = -1
+
     model.device = torch.device('cpu')
+    params.max_label_value = np.array([2, 2])
+
+    ori_rels_num = len(model.relation2id.keys())
+    copyed_rel_embed = model.rel_emb.weight.clone()
+
+
     adj_list, dgl_adj_list, triplets, entity2id, relation2id, id2entity, id2relation = process_files(params.file_paths, model.relation2id, add_traspose_rels=False)
 
-
-    if params.mode == 'sample':
-        neg_triplets = get_neg_samples_replacing_head_tail(triplets['links'], adj_list)
-        save_negative_triples_to_file(neg_triplets, id2entity, id2relation)
-    elif params.mode == 'all':
-        neg_triplets = get_neg_samples_replacing_head_tail_all(triplets['links'], adj_list)
-
-    ranks = []
-    all_head_scores = []
-    all_tail_scores = []
-    with mp.Pool(processes=None, initializer=intialize_worker, initargs=(model, adj_list, dgl_adj_list, id2entity, params)) as p:
-        for head_scores, head_rank, tail_scores, tail_rank in tqdm(p.imap(get_rank, neg_triplets), total=len(neg_triplets)):
-            ranks.append(head_rank)
-            ranks.append(tail_rank)
-
-            all_head_scores += head_scores.tolist()
-            all_tail_scores += tail_scores.tolist()
+    new_rel_nums = len(relation2id.keys())
 
 
 
 
 
-    isHit1List = [x for x in ranks if x <= 1]
-    isHit5List = [x for x in ranks if x <= 5]
-    isHit10List = [x for x in ranks if x <= 10]
-    hits_1 = len(isHit1List) / len(ranks)
-    hits_5 = len(isHit5List) / len(ranks)
-    hits_10 = len(isHit10List) / len(ranks)
+    all_mrr = []
+    all_hit1 = []
+    all_hit5 = []
+    all_hit10 = []
+    for r in range(1, params.runs+1):
+        print(ori_rels_num)
+        print(new_rel_nums)
 
-    mrr = np.mean(1 / np.array(ranks))
+        added_rel_emb = nn.Embedding(new_rel_nums, 32, sparse=False)
+        torch.nn.init.normal_(added_rel_emb.weight)
 
-    # print(f'MRR | Hits@1 | Hits@5 | Hits@10 : {mrr} | {hits_1} | {hits_5} | {hits_10}')
-    print(f'MRR: {mrr: .4f}')
-    print(f'Hits@1  : {hits_1: .4f}')
-    print(f'Hits@5  : {hits_5: .4f}')
-    print(f'Hits@10 : {hits_10: .4f}')
+        for i in range(0, ori_rels_num):
+            added_rel_emb.weight[i] = copyed_rel_embed[i]
+        #
+        model.rel_emb.weight.data = added_rel_emb.weight.data
+
+        # influence the random initialization of added_rel_emb
+        for i in range(len(model.gnn.layers)):
+            added_w_comp = nn.Parameter(torch.Tensor(new_rel_nums, 4))
+            nn.init.xavier_uniform_(added_w_comp, gain=nn.init.calculate_gain('relu'))
+            for j in range(0, ori_rels_num):
+                added_w_comp.data[j] = model.gnn.layers[i].w_comp.data[j]
+                model.gnn.layers[i].w_comp.data = added_w_comp.data
+            model.gnn.layers[i].num_rels = new_rel_nums
+
+        # added_rel_depen = nn.ModuleList([nn.Embedding(new_rel_nums, new_rel_nums) for _ in range(6)])
+        # for i in range(6):
+        #     torch.nn.init.normal_(added_rel_depen[i].weight)
+        #
+        # for i in range(6):
+        #     for j in range(0, ori_rels_num):
+        #         added_rel_depen[i].weight[j, :ori_rels_num] = copyed_rel_depen[i][j]
+        # model.rel_depen = added_rel_depen
+
+        if params.mode == 'sample':
+            neg_triplets = get_neg_samples_replacing_head_tail(triplets['links'], adj_list)
+            save_negative_triples_to_file(neg_triplets, id2entity, id2relation)
+        elif params.mode == 'all':
+            neg_triplets = get_neg_samples_replacing_head_tail_all(triplets['links'], adj_list)
+
+        ranks = []
+        all_head_scores = []
+        all_tail_scores = []
+        with mp.Pool(processes=None, initializer=intialize_worker, initargs=(model, adj_list, dgl_adj_list, id2entity, params)) as p:
+            for head_scores, head_rank, tail_scores, tail_rank in tqdm(p.imap(get_rank, neg_triplets), total=len(neg_triplets)):
+                ranks.append(head_rank)
+                ranks.append(tail_rank)
+
+                all_head_scores += head_scores.tolist()
+                all_tail_scores += tail_scores.tolist()
+
+
+
+
+
+        isHit1List = [x for x in ranks if x <= 1]
+        isHit5List = [x for x in ranks if x <= 5]
+        isHit10List = [x for x in ranks if x <= 10]
+        hits_1 = len(isHit1List) / len(ranks)
+        hits_5 = len(isHit5List) / len(ranks)
+        hits_10 = len(isHit10List) / len(ranks)
+
+        mrr = np.mean(1 / np.array(ranks))
+
+        all_mrr.append(mrr)
+        all_hit1.append(hits_1)
+        all_hit5.append(hits_5)
+        all_hit10.append(hits_10)
+
+        # print(f'MRR | Hits@1 | Hits@5 | Hits@10 : {mrr} | {hits_1} | {hits_5} | {hits_10}')
+        print(f'MRR: {mrr: .4f}')
+        print(f'Hits@1  : {hits_1: .4f}')
+        print(f'Hits@5  : {hits_5: .4f}')
+        print(f'Hits@10 : {hits_10: .4f}')
+
+    avg_mrr = np.mean(all_mrr)
+    avg_hit1 = np.mean(all_hit1)
+    avg_hit5 = np.mean(all_hit5)
+    avg_hit10 = np.mean(all_hit10)
+
+    print('\nAvg test Set Performance ')
+    print(f'MRR: {avg_mrr: .4f}')
+    print(f'Hits@1  : {avg_hit1: .4f}')
+    print(f'Hits@5  : {avg_hit5: .4f}')
+    print(f'Hits@10 : {avg_hit10: .4f}')
 
 if __name__ == '__main__':
 
@@ -463,21 +534,23 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Testing script for hits@10')
 
     # Experiment setup params
-    parser.add_argument("--model", type=str, default="TACT_Exp", help="model name")
     parser.add_argument("--expri_name", "-e", type=str, default="fb_v2_margin_loss",
                         help="Experiment name. Log file with this name will be created")
     parser.add_argument("--dataset", "-d", type=str, default="FB237_v2", help="Path to dataset")
     parser.add_argument("--mode", "-m", type=str, default="sample", choices=["sample", "all", "ruleN"],
                         help="Negative sampling mode")
+    parser.add_argument("--test_file", "-tf", type=str, default="test", help="Name of file containing test triplets")
     parser.add_argument('--enclosing_sub_graph', '-en', type=bool, default=True, help='whether to only consider enclosing subgraph')
     parser.add_argument("--hop", type=int, default=2, help="How many hops to go while eextracting subgraphs?")
+    parser.add_argument('--mapping', action='store_true', default=False, help='mapping')
     parser.add_argument('--seed', default=41504, type=int, help='Seed for randomization')
+    parser.add_argument("--runs", type=int, default=5, help="How many runs to perform for mean and std?")
 
     params = parser.parse_args()
 
     params.file_paths = {
         'graph': os.path.join('../data', params.dataset, 'train.txt'),
-        'links': os.path.join('../data', params.dataset, 'test.txt')
+        'links': os.path.join('../data', params.dataset, params.test_file+'.txt')
     }
 
     params.model_path = os.path.join('expri_save_models', params.expri_name, 'best_graph_classifier.pth')

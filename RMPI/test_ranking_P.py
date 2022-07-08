@@ -474,42 +474,58 @@ def main(params):
     params.max_label_value = np.array([2, 2])
     adj_list, dgl_adj_list, triplets, entity2id, relation2id, id2entity, id2relation = process_files(params.file_paths, model.relation2id, add_traspose_rels=False)
 
+    all_mrr = []
+    all_hit1 = []
+    all_hit5 = []
+    all_hit10 = []
+    for r in range(1, params.runs + 1):
+        if params.mode == 'sample':
+            neg_triplets = get_neg_samples_replacing_head_tail(triplets['links'], adj_list)
+            save_negative_triples_to_file(neg_triplets, id2entity, id2relation)
+        elif params.mode == 'all':
+            neg_triplets = get_neg_samples_replacing_head_tail_all(triplets['links'], adj_list)
 
-    if params.mode == 'sample':
-        neg_triplets = get_neg_samples_replacing_head_tail(triplets['links'], adj_list)
-        save_negative_triples_to_file(neg_triplets, id2entity, id2relation)
-    elif params.mode == 'all':
-        neg_triplets = get_neg_samples_replacing_head_tail_all(triplets['links'], adj_list)
+        ranks = []
+        all_head_scores = []
+        all_tail_scores = []
+        with mp.Pool(processes=None, initializer=intialize_worker, initargs=(model, adj_list, dgl_adj_list, id2entity, params)) as p:
+            for head_scores, head_rank, tail_scores, tail_rank in tqdm(p.imap(get_rank, neg_triplets), total=len(neg_triplets)):
+                ranks.append(head_rank)
+                ranks.append(tail_rank)
 
-    ranks = []
-    all_head_scores = []
-    all_tail_scores = []
-    with mp.Pool(processes=None, initializer=intialize_worker, initargs=(model, adj_list, dgl_adj_list, id2entity, params)) as p:
-        for head_scores, head_rank, tail_scores, tail_rank in tqdm(p.imap(get_rank, neg_triplets), total=len(neg_triplets)):
-            ranks.append(head_rank)
-            ranks.append(tail_rank)
+                all_head_scores += head_scores.tolist()
+                all_tail_scores += tail_scores.tolist()
 
-            all_head_scores += head_scores.tolist()
-            all_tail_scores += tail_scores.tolist()
+        isHit1List = [x for x in ranks if x <= 1]
+        isHit5List = [x for x in ranks if x <= 5]
+        isHit10List = [x for x in ranks if x <= 10]
+        hits_1 = len(isHit1List) / len(ranks)
+        hits_5 = len(isHit5List) / len(ranks)
+        hits_10 = len(isHit10List) / len(ranks)
 
+        mrr = np.mean(1 / np.array(ranks))
 
+        all_mrr.append(mrr)
+        all_hit1.append(hits_1)
+        all_hit5.append(hits_5)
+        all_hit10.append(hits_10)
 
+        # print(f'MRR | Hits@1 | Hits@5 | Hits@10 : {mrr} | {hits_1} | {hits_5} | {hits_10}')
+        print(f'MRR: {mrr: .4f}')
+        print(f'Hits@1  : {hits_1: .4f}')
+        print(f'Hits@5  : {hits_5: .4f}')
+        print(f'Hits@10 : {hits_10: .4f}')
 
+    avg_mrr = np.mean(all_mrr)
+    avg_hit1 = np.mean(all_hit1)
+    avg_hit5 = np.mean(all_hit5)
+    avg_hit10 = np.mean(all_hit10)
 
-    isHit1List = [x for x in ranks if x <= 1]
-    isHit5List = [x for x in ranks if x <= 5]
-    isHit10List = [x for x in ranks if x <= 10]
-    hits_1 = len(isHit1List) / len(ranks)
-    hits_5 = len(isHit5List) / len(ranks)
-    hits_10 = len(isHit10List) / len(ranks)
-
-    mrr = np.mean(1 / np.array(ranks))
-
-    # print(f'MRR | Hits@1 | Hits@5 | Hits@10 : {mrr} | {hits_1} | {hits_5} | {hits_10}')
-    print(f'MRR: {mrr: .4f}')
-    print(f'Hits@1  : {hits_1: .4f}')
-    print(f'Hits@5  : {hits_5: .4f}')
-    print(f'Hits@10 : {hits_10: .4f}')
+    print('\nAvg test Set Performance ')
+    print(f'MRR: {avg_mrr: .4f}')
+    print(f'Hits@1  : {avg_hit1: .4f}')
+    print(f'Hits@5  : {avg_hit5: .4f}')
+    print(f'Hits@10 : {avg_hit10: .4f}')
 
 if __name__ == '__main__':
 
@@ -518,7 +534,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Testing script for hits@10')
 
     # Experiment setup params
-    parser.add_argument("--model", type=str, default="TACT_Exp", help="model name")
     parser.add_argument("--expri_name", "-e", type=str, default="fb_v2_margin_loss",
                         help="Experiment name. Log file with this name will be created")
     parser.add_argument("--dataset", "-d", type=str, default="FB237_v2", help="Path to dataset")
@@ -528,10 +543,10 @@ if __name__ == '__main__':
     parser.add_argument("--hop", type=int, default=2, help="How many hops to go while eextracting subgraphs?")
     parser.add_argument('--seed', default=41504, type=int, help='Seed for randomization')
     parser.add_argument('--target2nei_atten', action='store_true', help='apply target-aware attention for 2-hop neighbors')
-    parser.add_argument('--nei_atten', action='store_true', help='apply target-aware attention for 2-hop neighbors')
     parser.add_argument('--conc', action='store_true', help='apply target-aware attention for 2-hop neighbors')
-    parser.add_argument('--ablation', type=int, default=3,
-                        help='0,1,2,3 correspond to normal, no-sub, no-ent, only-rel')
+    parser.add_argument('--ablation', type=int, default=0, help='0,1 correspond to base, NE')
+    parser.add_argument("--runs", type=int, default=5, help="How many runs to perform for mean and std?")
+
     params = parser.parse_args()
 
     params.file_paths = {

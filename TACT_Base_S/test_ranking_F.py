@@ -522,7 +522,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Testing script for hits@10')
 
     # Experiment setup params
-    parser.add_argument("--model", type=str, default="TACT_Exp", help="model name")
     parser.add_argument("--expri_name", "-e", type=str, default="fb_v2_margin_loss",
                         help="Experiment name. Log file with this name will be created")
     parser.add_argument("--dataset", "-d", type=str, default="FB237_v2", help="Path to dataset")
@@ -532,7 +531,7 @@ if __name__ == '__main__':
     parser.add_argument("--hop", type=int, default=2, help="How many hops to go while eextracting subgraphs?")
     parser.add_argument('--mapping', action='store_true', default=False, help='mapping')
     parser.add_argument('--seed', default=41504, type=int, help='Seed for randomization')
-    parser.add_argument("--runs", type=int, default=2, help="How many runs to perform for mean and std?")
+    parser.add_argument("--runs", type=int, default=5, help="How many runs to perform for mean and std?")
 
     params = parser.parse_args()
 

@@ -71,12 +71,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='TransE model')
 
     # Experiment setup params
-    parser.add_argument("--model", type=str, default="TACT_Exp_CloseOneHop", help="model name")
     parser.add_argument("--expri_name", "-e", type=str, default="default", help="A folder with this name would be created to dump saved models and log files")
     parser.add_argument("--dataset", "-d", type=str, default="Toy", help="Dataset string")
     parser.add_argument("--train_file", "-tf", type=str, default="train", help="Name of file containing training triplets")
-    parser.add_argument("--test_file", "-t", type=str, default="test2", help="Name of file containing test triplets")
-    parser.add_argument("--runs", type=int, default=1, help="How many runs to perform for mean and std?")
+    parser.add_argument("--test_file", "-t", type=str, default="test", help="Name of file containing test triplets")
+    parser.add_argument("--runs", type=int, default=5, help="How many runs to perform for mean and std?")
     parser.add_argument("--gpu", type=int, default=0, help="Which GPU to use?")
 
     # Data processing pipeline params
@@ -90,10 +89,8 @@ if __name__ == '__main__':
     parser.add_argument('--enclosing_sub_graph', '-en', type=bool, default=True, help='whether to only consider enclosing subgraph')
     parser.add_argument('--seed', default=41504, type=int, help='Seed for randomization')
     parser.add_argument('--target2nei_atten', action='store_true', help='apply target-aware attention for 2-hop neighbors')
-    parser.add_argument('--nei_atten', action='store_true', help='apply target-aware attention for 2-hop neighbors')
     parser.add_argument('--conc', action='store_true', help='apply target-aware attention for 2-hop neighbors')
-    parser.add_argument('--ablation', type=int, default=3,
-                        help='0,1,2,3 correspond to normal, no-sub, no-ent, only-rel')
+    parser.add_argument('--ablation', type=int, default=0, help='0,1 correspond to base, NE')
 
     params = parser.parse_args()
     initialize_experiment(params)

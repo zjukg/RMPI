@@ -121,9 +121,6 @@ class GraphClassifier(nn.Module):
                 torch.sparse.mm(edge_connect_l[i], torch.ones(num_edges, 1).to(device=device)) + 1e-30)
 
 
-        # rel_neighbor_embd = sum([torch.sparse.mm(edge_connect_l[i],
-        #                                          self.fc_reld[i](self.rel_emb(g.edata['type']))) * 1. /
-        #                          norm_sparse[i] for i in range(self.link_mode)]) * 1. / self.link_mode
 
         edge_embeds = self.rel_vectors[g.edata['type']]
         edge_embeds = self.transform2(self.transform1(edge_embeds))
@@ -134,10 +131,7 @@ class GraphClassifier(nn.Module):
                                    for i in range(self.link_mode)]) * 1. / self.link_mode
 
 
-        # rel_final_emb = self.conc(torch.cat([rel_neighbor_embd, self.rel_emb(rel_labels)], dim=-1))
-        # rel_final_emb = self.conc(torch.cat([rel_neighbor_embd, self.rel_emb(rel_labels),
-        #                                      rel_neighbor_embd_o, self.transform(self.rel_vectors[rel_labels])],
-        #                                     dim=-1))
+
         rel_embeds = self.rel_vectors[rel_labels]
         rel_embeds = self.transform2(self.transform1(rel_embeds))
         rel_final_emb = self.conc(torch.cat([rel_neighbor_embd_o, rel_embeds],
@@ -146,11 +140,7 @@ class GraphClassifier(nn.Module):
         g_rep = F.normalize(rel_final_emb, p=2, dim=-1)
 
 
-        # else:
-        #     g_rep = torch.cat([g_out.view(-1, self.params.num_gcn_layers * self.params.emb_dim),
-        #                        head_embs.view(-1, self.params.num_gcn_layers * self.params.emb_dim),
-        #                        tail_embs.view(-1, self.params.num_gcn_layers * self.params.emb_dim),
-        #                        rel_final_emb], dim=1)
+
 
         output = self.fc_layer(g_rep)
         return output

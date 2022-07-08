@@ -487,21 +487,6 @@ def main(params):
 
     new_rel_nums = len(relation2id.keys())
 
-
-
-    #######
-
-
-
-    # added_rel_depen = nn.ModuleList([nn.Embedding(new_rel_nums, new_rel_nums) for _ in range(6)])
-    # for i in range(6):
-    #     torch.nn.init.normal_(added_rel_depen[i].weight)
-    #
-    # for i in range(6):
-    #     for j in range(0, ori_rel_nums):
-    #         added_rel_depen[i].weight[j, :ori_rel_nums] = model.rel_depen[i].weight[j]
-    # model.rel_depen = added_rel_depen
-
     all_mrr = []
     all_hit1 = []
     all_hit5 = []
@@ -577,7 +562,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Testing script for hits@10')
 
     # Experiment setup params
-    parser.add_argument("--model", type=str, default="TACT_Exp", help="model name")
     parser.add_argument("--expri_name", "-e", type=str, default="fb_v2_margin_loss",
                         help="Experiment name. Log file with this name will be created")
     parser.add_argument("--dataset", "-d", type=str, default="FB237_v2", help="Path to dataset")
@@ -591,8 +575,8 @@ if __name__ == '__main__':
     parser.add_argument("--runs", type=int, default=5, help="How many runs to perform for mean and std?")
     parser.add_argument('--target2nei_atten', action='store_true', help='apply target-aware attention for 2-hop neighbors')
     parser.add_argument('--conc', action='store_true', help='apply target-aware attention for 2-hop neighbors')
-    parser.add_argument('--ablation', type=int, default=3,
-                        help='0,1,2,3 correspond to normal, no-sub, no-ent, only-rel')
+    parser.add_argument('--ablation', type=int, default=0, help='0,1 correspond to base, NE')
+
 
     params = parser.parse_args()
 

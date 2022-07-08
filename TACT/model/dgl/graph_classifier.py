@@ -141,11 +141,9 @@ class GraphClassifier(nn.Module):
             rel_neighbor_embd = sum([torch.sparse.mm(edge_connect_l[i],
                                                      self.fc_reld[i](self.rel_emb(g.edata['type']))) * 1. /
                                      norm_sparse[i] for i in range(self.link_mode)]) * 1. / self.link_mode
-            # print("1", end='')
         else:
             if self.rel_emb.weight.requires_grad:
                 self.rel_emb.weight.requires_grad = False
-            # print("2", end='')
             rel_neighbor_embd = sum([torch.sparse.mm(
                 self.sparse_dense_mul(edge_connect_l[i],
                                       torch.softmax(self.rel_depen[i].weight, dim=1)[rel_labels][:,

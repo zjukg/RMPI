@@ -62,10 +62,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='TransE model')
 
     # Experiment setup params
-    parser.add_argument("--model", type=str, default="TACT_Exp_TwoGraph", help="model name")
+    parser.add_argument("--model", type=str, default="RMPI", help="model name")
     parser.add_argument("--expri_name", "-e", type=str, default="default",
                         help="A folder with this name would be created to dump saved models and log files")
-    parser.add_argument("--dataset", "-d", type=str, help="Dataset string")
+    parser.add_argument("--dataset", "-d", type=str, default="toy", help="Dataset string")
     parser.add_argument("--gpu", type=int, default=0, help="Which GPU to use?")
     parser.add_argument("--train_file", "-tf", type=str, default="train", help="Name of file containing training triplets")
     parser.add_argument("--valid_file", "-vf", type=str, default="valid", help="Name of file containing validation triplets")
@@ -94,29 +94,15 @@ if __name__ == '__main__':
     parser.add_argument("--num_neg_samples_per_link", '-neg', type=int, default=1, help="Number of negative examples to sample per positive link")
     parser.add_argument("--num_workers", type=int, default=8, help="Number of dataloading processes")
     parser.add_argument('--enclosing_sub_graph', '-en', type=bool, default=False, help='whether to only consider enclosing subgraph')
-
     # Model params
     parser.add_argument("--rel_emb_dim", "-r_dim", type=int, default=32, help="Relation embedding size")
-    parser.add_argument("--attn_rel_emb_dim", "-ar_dim", type=int, default=32, help="Relation embedding size for attention")
-    parser.add_argument("--emb_dim", "-dim", type=int, default=32, help="Entity embedding size")
     parser.add_argument("--num_gcn_layers", "-l", type=int, default=2, help="Number of GCN layers")
-    parser.add_argument("--num_bases", "-b", type=int, default=4, help="Number of basis functions to use for GCN weights")
-    parser.add_argument("--dropout", type=float, default=0, help="Dropout rate in GNN layers")
-    parser.add_argument("--edge_dropout", type=float, default=0.5, help="Dropout rate in edges of the subgraphs")
-    parser.add_argument('--gnn_agg_type', '-a', type=str, choices=['sum', 'mlp', 'gru'], default='sum', help='what type of aggregation to do in gnn msg passing')
-    parser.add_argument('--add_ht_emb', '-ht', type=bool, default=True, help='whether to concatenate head/tail embedding with pooled graph representation')
-    parser.add_argument('--has_attn', '-attn', action='store_true', help='whether to have attn in model or not')
-    # TACT params
-    parser.add_argument('--six_mode', '-six', type=bool, default=False, help='whether to start the six mode')
-    parser.add_argument('--no_jk', action='store_true', default=True, help='Disable JK connection')
+    parser.add_argument("--dropout", type=float, default=0.5, help="Dropout rate in edges of the subgraphs")
     parser.add_argument('--target2nei_atten', action='store_true', help='apply target-aware attention for 2-hop neighbors')
-    parser.add_argument('--nei_atten', action='store_true', help='apply target-aware attention for 2-hop neighbors')
-    parser.add_argument('--entity_atten', action='store_true', help='apply target-aware attention for 2-hop neighbors')
     parser.add_argument('--conc', action='store_true', help='apply target-aware attention for 2-hop neighbors')
-
     parser.add_argument('--epoch', type=int, default=0, help='to record epoch')
-    parser.add_argument('--ablation', type=int, default=3,
-                        help='0,1,2,3 correspond to normal, no-sub, no-ent, only-rel')
+    parser.add_argument('--ablation', type=int, default=0,
+                        help='0,1 correspond to base, NE')
 
     parser.add_argument('--seed', default=41504, type=int, help='Seed for randomization')
 

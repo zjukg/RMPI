@@ -1,13 +1,8 @@
-from .rgcn_model import RGCN
-from dgl import mean_nodes
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
 import numpy as np
-"""
-File based off of dgl tutorial on RGCN
-Source: https://github.com/dmlc/dgl/tree/master/examples/pytorch/rgcn
-"""
+
 
 
 class GraphClassifier(nn.Module):
@@ -16,9 +11,7 @@ class GraphClassifier(nn.Module):
 
         self.params = params
         self.relation2id = relation2id
-
         self.relation_list = list(self.relation2id.values())
-        self.no_jk = self.params.no_jk
         self.link_mode = 6
         self.is_big_dataset = False
         self.is_big_dataset = True if self.params.dataset in ['wikidata_small'] else False
@@ -48,7 +41,6 @@ class GraphClassifier(nn.Module):
 
 
         self.leakyrelu = nn.LeakyReLU(0.2)
-        self.relu = nn.ReLU()
         self.drop = torch.nn.Dropout(0.5)
 
 
@@ -90,8 +82,7 @@ class GraphClassifier(nn.Module):
             in_edge_in = in_edge_in.to(device=self.device).to_dense()[v_node].to_sparse()
             out_edge_in = out_edge_in.to(device=self.device).to_dense()[v_node].to_sparse()
 
-        # print("done")
-        ## six patterns
+
         edge_mode_5 = out_edge_out.mul(in_edge_in)
         edge_mode_6 = in_edge_out.mul(out_edge_in)
         out_edge_out = out_edge_out.sub(edge_mode_5)
@@ -101,7 +92,6 @@ class GraphClassifier(nn.Module):
 
 
         if aggr_flag == 1:
-            # step by step
             edge_connect_l = [in_edge_out, out_edge_out, in_edge_in, out_edge_in, edge_mode_5, edge_mode_6]
 
             rel_neighbor_embd = sum([torch.sparse.mm(edge_connect_l[i],
@@ -111,7 +101,6 @@ class GraphClassifier(nn.Module):
             return rel_neighbor_embd
 
         elif aggr_flag == 2:
-            # step by step
             edge_connect_l = [in_edge_out, out_edge_out, in_edge_in, out_edge_in, edge_mode_5, edge_mode_6]
 
             if self.params.target2nei_atten:
@@ -140,7 +129,6 @@ class GraphClassifier(nn.Module):
         elif aggr_flag == 0:
             # # print(edge_mode_5)
             num_target = u_node.shape[0]
-            # dis_target_edge_ids = (graph.edata['id'] == 1).nonzero().squeeze(1)
             dis_target_edge_ids = self.rel_edge_ids
             self_mask = torch.ones((num_target, num_edges))
             for i in range(num_target):
@@ -178,7 +166,6 @@ class GraphClassifier(nn.Module):
 
         head_ids = (en_g.ndata['id'] == 1).nonzero().squeeze(1)
         tail_ids = (en_g.ndata['id'] == 2).nonzero().squeeze(1)
-        rel_edge_ids = (en_g.edata['id'] == 1).nonzero().squeeze(1)
 
         head_node, tail_node = head_ids, tail_ids
         u_in_nei = en_g.in_edges(head_node, 'all')
@@ -201,7 +188,6 @@ class GraphClassifier(nn.Module):
                 edge2rel[eid] = rel_labels[i]
 
 
-        # print('num edges:', num_edges)
         self.h0 = self.rel_emb(en_g.edata['type'])
 
         neighbor_edges = torch.cat((u_in_nei[2], u_out_nei[2], v_in_nei[2], v_out_nei[2]))
@@ -219,7 +205,6 @@ class GraphClassifier(nn.Module):
         self.neighbor_edges2rels = neighbor_edges2rels
 
 
-
         '''
         agg_flag:
             2: 2-hop neighbors
@@ -228,17 +213,12 @@ class GraphClassifier(nn.Module):
         '''
         self.h0_extracted = self.h0[neighbor_edges]
         h_0_N = self.rel_aggr(en_g, neighbor_u_nodes, neighbor_v_nodes, num_nodes, num_edges, aggr_flag=2, is_drop=True)
-        # print(h_0_N.shape)  # 18,32
         h_0_N = F.relu(h_0_N)
         self.h1 = self.rel_emb(en_g.edata['type'])
 
-        # self.h1 = torch.mm(self.h1, self.self_loop)
         for i, eid in enumerate(neighbor_edges):
-            # self.h1[eid] = self.h1[eid] + h_0_N[i]
-            # self.h1[eid] = h_0_N[i]
             self.h1[eid] = self.h1[eid] + h_0_N[i]
 
-        # self.h1 = F.relu(self.h1)
 
         rel_edge_ids = [en_g.edge_id(head_ids[i], tail_ids[i]) for i in range(head_ids.shape[0])]
 
@@ -253,7 +233,6 @@ class GraphClassifier(nn.Module):
 
 
         if self.params.ablation == 0: # RMP base
-            # print("base...")
             final_embed = h2
             g_rep = F.normalize(final_embed, p=2, dim=-1)
         elif self.params.ablation == 1:  # RMP NE
@@ -278,8 +257,6 @@ class GraphClassifier(nn.Module):
 
 
         output = self.fc_layer(g_rep)
-        # # rel_cls_embed = self.fc_layer2(g_rep)
-        # return output, rel_cls_embed
         return output
 
     @staticmethod

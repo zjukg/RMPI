@@ -16,8 +16,6 @@ from warnings import simplefilter
 import random
 import torch.nn as nn
 import pickle
-# from utils.data_utils import load_binary_file
-
 def load_binary_file(in_file, py_version=3):
     if py_version == 2:
         with open(in_file, 'rb') as f:
@@ -83,16 +81,8 @@ def main(params):
     simplefilter(action='ignore', category=UserWarning)
     simplefilter(action='ignore', category=SparseEfficiencyWarning)
 
-    # triplets, entity2id, relation2id, id2entity, id2relation = process_files(params.file_paths,
-    #                                                                          None)
-    # rel_external_embeds = load_binary_file(params.rel_external_embed_file)
-    # rel_feats = list()
-    # for idx in sorted(list(id2relation.keys())):
-    #     feat = rel_external_embeds[id2relation[idx]]
-    #     rel_feats.append(feat)
-    # rel_vectors = torch.from_numpy(np.vstack(tuple(rel_feats)))
     graph_classifier = initialize_model(params, None, None, load_model=True)
-    # ori_rels_num = len(graph_classifier.relation2id.keys())
+
 
     print(f"Device: {params.device}")
 
@@ -116,7 +106,10 @@ def main(params):
     graph_classifier.rel_vectors = torch.from_numpy(rel_vectors).to(device=params.device)
 
 
+
     for r in range(1, params.runs + 1):
+
+
 
         params.db_path = os.path.join(params.main_dir, f'../data/{params.dataset}/test_subgraphs_{params.model}_neg_{params.num_neg_samples_per_link}_hop_{params.hop}')
 
@@ -128,6 +121,8 @@ def main(params):
                                add_traspose_rels=False,
                                num_neg_samples_per_link=params.num_neg_samples_per_link)
 
+
+
         test_evaluator = Evaluator(params, graph_classifier, test)
 
         result = test_evaluator.eval(save=True)
@@ -138,8 +133,7 @@ def main(params):
         all_auc_pr.append(result['auc_pr'])
         auc_pr_mean = auc_pr_mean + (result['auc_pr'] - auc_pr_mean) / r
 
-    # auc_std = np.std(all_auc_roc)
-    # auc_pr_std = np.std(all_auc_pr)
+
 
     auc_roc_std = np.std(all_auc_roc)
     auc_pr_std = np.std(all_auc_pr)
@@ -158,12 +152,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='TransE model')
 
     # Experiment setup params
-    parser.add_argument("--model", type=str, default="TACT_Base", help="model name")
     parser.add_argument("--expri_name", "-e", type=str, default="default", help="A folder with this name would be created to dump saved models and log files")
     parser.add_argument("--dataset", "-d", type=str, default="Toy", help="Dataset string")
-    parser.add_argument("--train_file", "-tf", type=str, default="train", help="Name of file containing training triplets")
-    parser.add_argument("--test_file", "-t", type=str, default="test2", help="Name of file containing test triplets")
-    parser.add_argument("--runs", type=int, default=1, help="How many runs to perform for mean and std?")
+    parser.add_argument("--train_file", type=str, default="train", help="Name of file containing training triplets")
+    parser.add_argument("--test_file", "-tf", type=str, default="test", help="Name of file containing test triplets")
+    parser.add_argument("--runs", type=int, default=5, help="How many runs to perform for mean and std?")
     parser.add_argument("--gpu", type=int, default=0, help="Which GPU to use?")
 
     # Data processing pipeline params
@@ -175,9 +168,9 @@ if __name__ == '__main__':
     parser.add_argument("--batch_size", type=int, default=16, help="Batch size")
     parser.add_argument("--num_workers", type=int, default=8, help="Number of dataloading processes")
     parser.add_argument('--enclosing_sub_graph', '-en', type=bool, default=True, help='whether to only consider enclosing subgraph')
-    parser.add_argument('--mapping', action='store_true', default=False, help='mapping')
-
     parser.add_argument('--seed', default=41504, type=int, help='Seed for randomization')
+    parser.add_argument('--conc', action='store_true', help='apply target-aware attention for 2-hop neighbors')
+    parser.add_argument('--ablation', type=int, default=0, help='0,1 correspond to base, NE')
 
     params = parser.parse_args()
     initialize_experiment(params)
@@ -187,6 +180,8 @@ if __name__ == '__main__':
         'test': os.path.join(params.main_dir, '../data/{}/{}.txt'.format(params.dataset, params.test_file))
     }
     params.rel_external_embed_file = '../data/external_rel_embeds/nell_onto_embeds_TransE_300.pkl'
+    # params.rel_external_embed_file = '../data/external_rel_embeds/nell_ext_onto_embeds_TransE_300.pkl'
+
     np.random.seed(params.seed)
     random.seed(params.seed)
     torch.manual_seed(params.seed)
