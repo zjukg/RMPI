@@ -3,10 +3,8 @@
 Code and Data for the submission: "Relational Message Passing for Fully Inductive Knowledge Graph Completion".
 
 > In this work, we propose a novel method named RMPI which uses a novel *R*elational *M*essage *P*assing network for fully *I*nductive knowledge graph completion, where the KG is completed with unseen entities and unseen relations newly emerged during testing.
-
-> Our proposed RMPI passes messages directly between relations to make full use of the relation patterns for subgraph reasoning with new techniques on graph transformation, graph pruning, relation-aware neighbourhood attention, addressing empty subgraphs, etc., and can utilize the relation semantics defined in the KG's ontological schema.
-
-> Extensive evaluation on multiple benchmarks has shown the effectiveness of RMPI's techniques and its better performance compared with the state-of-the-art methods that support fully inductive KGC as well traditional partially inductive KGC.
+<br>Our proposed RMPI passes messages directly between relations to make full use of the relation patterns for subgraph reasoning with new techniques on graph transformation, graph pruning, relation-aware neighbourhood attention, addressing empty subgraphs, etc., and can utilize the relation semantics defined in the KG's ontological schema.
+<br>Extensive evaluation on multiple benchmarks has shown the effectiveness of RMPI's techniques and its better performance compared with the state-of-the-art methods that support fully inductive KGC as well traditional partially inductive KGC.
 
 
 ### Requirements
