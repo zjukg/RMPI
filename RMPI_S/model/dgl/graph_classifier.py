@@ -1,13 +1,8 @@
-from .rgcn_model import RGCN
-from dgl import mean_nodes
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
 import numpy as np
-"""
-File based off of dgl tutorial on RGCN
-Source: https://github.com/dmlc/dgl/tree/master/examples/pytorch/rgcn
-"""
+
 
 
 class GraphClassifier(nn.Module):
@@ -48,18 +43,15 @@ class GraphClassifier(nn.Module):
         else:
             self.device = torch.device('cpu')
 
-        # self.transform = nn.Linear(self.rel_vectors.shape[1], self.params.rel_emb_dim)
         self.transform1 = nn.Linear(self.rel_vectors.shape[1], self.params.rel_emb_dim)
         self.transform2 = nn.Linear(self.params.rel_emb_dim, self.params.rel_emb_dim)
         self.leakyrelu = nn.LeakyReLU(0.2)
-        self.relu = nn.ReLU()
         self.drop = torch.nn.Dropout(0.5)
         if self.params.conc:
             self.conc = nn.Linear(self.params.rel_emb_dim*2, self.params.rel_emb_dim)
 
 
     def rel_aggr(self, graph, u_node, v_node, num_nodes, num_edges, aggr_flag, is_drop):
-        # print("node pair:", u_node, v_node)
         u_in_edge = graph.in_edges(u_node, 'all')
         u_out_edge = graph.out_edges(u_node, 'all')
         v_in_edge = graph.in_edges(v_node, 'all')
@@ -94,8 +86,7 @@ class GraphClassifier(nn.Module):
             in_edge_in = in_edge_in.to(device=self.device).to_dense()[v_node].to_sparse()
             out_edge_in = out_edge_in.to(device=self.device).to_dense()[v_node].to_sparse()
 
-        # print("done")
-        ## six patterns
+
         edge_mode_5 = out_edge_out.mul(in_edge_in)
         edge_mode_6 = in_edge_out.mul(out_edge_in)
         out_edge_out = out_edge_out.sub(edge_mode_5)
@@ -104,11 +95,8 @@ class GraphClassifier(nn.Module):
         out_edge_in = out_edge_in.sub(edge_mode_6)
 
 
-        # # step by step
-        # edge_connect_l = [in_edge_out, out_edge_out, in_edge_in, out_edge_in, edge_mode_5, edge_mode_6]
 
         if aggr_flag == 1:
-            # step by step
             edge_connect_l = [in_edge_out, out_edge_out, in_edge_in, out_edge_in, edge_mode_5, edge_mode_6]
 
             rel_neighbor_embd = sum([torch.sparse.mm(edge_connect_l[i],
@@ -118,7 +106,6 @@ class GraphClassifier(nn.Module):
             return rel_neighbor_embd
 
         elif aggr_flag == 2:
-            # step by step
             edge_connect_l = [in_edge_out, out_edge_out, in_edge_in, out_edge_in, edge_mode_5, edge_mode_6]
 
 
@@ -131,9 +118,7 @@ class GraphClassifier(nn.Module):
             return rel_neighbor_embd
 
         elif aggr_flag == 0:
-            # # print(edge_mode_5)
             num_target = u_node.shape[0]
-            # dis_target_edge_ids = (graph.edata['id'] == 1).nonzero().squeeze(1)
             dis_target_edge_ids = self.rel_edge_ids
             self_mask = torch.ones((num_target, num_edges))
             for i in range(num_target):
@@ -143,8 +128,6 @@ class GraphClassifier(nn.Module):
             # self_mask = torch.sparse_coo_tensor((rows, dis_target_edge_ids), values, size=torch.Size((num_target, num_edges)))
             # print(edge_mode_5)
 
-            # step by step
-            # edge_connect_l = [in_edge_out, out_edge_out, in_edge_in, out_edge_in, edge_mode_5, edge_mode_6]
 
 
             # edge_connect_l = sum(edge_connect_l)
@@ -206,7 +189,6 @@ class GraphClassifier(nn.Module):
                 edge2rel[eid] = rel_labels[i]
 
 
-        # self.h0 = self.transform(self.rel_vectors[en_g.edata['type']])
         self.h0 = self.transform2(self.transform1(self.rel_vectors[en_g.edata['type']]))
 
         neighbor_edges = torch.cat((u_in_nei[2], u_out_nei[2], v_in_nei[2], v_out_nei[2]))
@@ -231,14 +213,9 @@ class GraphClassifier(nn.Module):
         self.h0_extracted = self.h0[neighbor_edges]
         h_0_N = self.rel_aggr(en_g, neighbor_u_nodes, neighbor_v_nodes, num_nodes, num_edges, aggr_flag=2, is_drop=True)
         h_0_N = F.relu(h_0_N)
-        # print(h_0_N.shape)  # 18,32
-        # self.h1 = self.transform(self.rel_vectors[en_g.edata['type']])
         self.h1 = self.transform2(self.transform1(self.rel_vectors[en_g.edata['type']]))
 
-        # self.h1 = torch.mm(self.h1, self.self_loop)
         for i, eid in enumerate(neighbor_edges):
-            # self.h1[eid] = self.h1[eid] + h_0_N[i]
-            # self.h1[eid] = h_0_N[i]
             self.h1[eid] = self.h1[eid] + h_0_N[i]
 
 
@@ -254,7 +231,6 @@ class GraphClassifier(nn.Module):
 
 
         if self.params.ablation == 0: # RMP base
-            # print("base...")
             final_embed = h2
             g_rep = F.normalize(final_embed, p=2, dim=-1)
         elif self.params.ablation == 1:  # RMP NE
