@@ -94,13 +94,13 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
        <th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th><th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th>
     </tr>
     <tr>
-        <td>TACT-base</td><td>80.62</td><td>77.93</td><td>82.45</td><td>82.45</td><td>78.11</td><td>76.76</td><td>78.68</td><td>78.68</td>
+        <td>TACT-base</td><td>80.62</td><td><strong>77.93</strong></td><td>82.45</td><td>82.45</td><td>78.11</td><td>76.76</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
         <td>TACT</td><td>79.56</td><td>76.33</td><td>82.45</td><td>82.45</td><td>78.55</td><td>76.87</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
-        <td>RMPI-base</td><td>**79.69**</td><td>76.60</td><td>82.18</td><td>82.45</td><td>78.02</td><td>76.53</td><td>78.68</td><td>78.68</td>
+        <td>RMPI-base</td><td>79.69</td><td>76.60</td><td>82.18</td><td>82.45</td><td>78.02</td><td>76.53</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
         <td>RMPI-NE</td><td>81.58</td><td>75.53</td><td><strong>88.03</strong></td><td><strong>89.63</strong></td><td>81.07</td><td>78.68</td><td><strong>82.31</strong></td><td><strong>83.22</strong></td>
@@ -109,7 +109,7 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
         <td>RMPI-TA</td><td>69.73</td><td>58.51</td><td>82.45</td><td>82.45</td><td>78.13</td><td>76.76</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
-        <td>RMPI-NE-TA</td><td><strong>81.74</strong></td><td><strong>77.13</strong></td><td>86.44</td><td>87.77</td><td><strong>81.34</strong></td><td><strong>79.82</strong></td><td>81.97</td><td>82.43</td>
+        <td>RMPI-NE-TA</td><td><strong>81.74</strong></td><td>77.13</td><td>86.44</td><td>87.77</td><td><strong>81.34</strong></td><td><strong>79.82</strong></td><td>81.97</td><td>82.43</td>
     </tr>
 </table>
 
@@ -145,7 +145,7 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
 
 <table>
     <tr>  
-        <th rowspan="2">Method</th><th colspan="4">WN18RR.v3</th>
+        <th rowspan="2">Method</th><th colspan="4">NELL-995.v1</th>
     </tr>
     <tr>
        <th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th>
