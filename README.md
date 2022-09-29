@@ -103,13 +103,13 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
         <td>RMPI-base</td><td>**79.69**</td><td>76.60</td><td>82.18</td><td>82.45</td><td>78.02</td><td>76.53</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
-        <td>RMPI-NE</td><td>81.58</td><td>75.53</td><td>88.03</td><td>89.63</td><td>81.07</td><td>78.68</td><td>82.31</td><td>83.22</td>
+        <td>RMPI-NE</td><td>81.58</td><td>75.53</td><td><strong>88.03</strong></td><td><strong>89.63</strong></td><td>81.07</td><td>78.68</td><td><strong>82.31</strong></td><td><strong>83.22</strong></td>
     </tr>
     <tr>
         <td>RMPI-TA</td><td>69.73</td><td>58.51</td><td>82.45</td><td>82.45</td><td>78.13</td><td>76.76</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
-        <td>RMPI-NE-TA</td><td>81.74</td><td>77.13</td><td>86.44</td><td>87.77</td><td>81.34</td><td>79.82</td><td>81.97</td><td>82.43</td>
+        <td>RMPI-NE-TA</td><td><strong>81.74</strong></td><td><strong>77.13</strong></td><td>86.44</td><td>87.77</td><td><strong>81.34</strong></td><td><strong>79.82</strong></td><td>81.97</td><td>82.43</td>
     </tr>
 </table>
 
@@ -130,13 +130,13 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
         <td>RMPI-base</td><td>55.93 </td><td>52.56 </td><td>58.18 </td><td>58.68 </td><td>73.43 </td><td>72.32 </td><td>73.41 </td><td>73.41 </td>
     </tr>
     <tr>
-        <td>RMPI-NE</td><td> 64.85</td><td>60.17 </td><td>68.43 </td><td>70.33 </td><td>77.14 </td><td>74.95 </td><td> 78.13</td><td>79.81 </td>
+        <td>RMPI-NE</td><td> 64.85</td><td><strong>60.17</strong> </td><td>68.43 </td><td>70.33 </td><td>77.14 </td><td><strong>74.95</strong> </td><td> 78.13</td><td>79.81 </td>
     </tr>
     <tr>
         <td>RMPI-TA</td><td>56.23 </td><td>52.81 </td><td>57.93 </td><td>58.84 </td><td> 73.68</td><td>72.15 </td><td>73.41 </td><td>73.41 </td>
     </tr>
     <tr>
-        <td>RMPI-NE-TA</td><td>65.62</td><td>60.08 </td><td>70.08</td><td>73.14 </td><td>77.68 </td><td>74.84 </td><td>79.50 </td><td>81.42 </td>
+        <td>RMPI-NE-TA</td><td><strong>65.62</strong></td><td>60.08 </td><td><strong>70.08</strong></td><td><strong>73.14</strong> </td><td><strong>77.68</strong> </td><td>74.84 </td><td><strong>79.50</strong> </td><td><strong>81.42</strong> </td>
     </tr>
 </table>
 
@@ -157,16 +157,16 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
         <td>TACT</td><td>47.68 </td><td>43.50 </td><td>48.00 </td><td>51.50 </td>
     </tr>
     <tr>
-        <td>RMPI-base</td><td>53.43</td><td>48.00</td><td>57.00 </td><td>59.50</td>
+        <td>RMPI-base</td><td>53.43</td><td>48.00</td><td><strong>57.00</strong> </td><td>59.50</td>
     </tr>
     <tr>
-        <td>RMPI-NE</td><td> 54.05</td><td>49.50 </td><td>55.00 </td><td>60.50 </td>
+        <td>RMPI-NE</td><td> 54.05</td><td>49.50 </td><td>55.00 </td><td><strong>60.50</strong> </td>
     </tr>
     <tr>
         <td>RMPI-TA</td><td> 48.97</td><td>44.00 </td><td>52.50 </td><td> 53.00</td>
     </tr>
     <tr>
-        <td>RMPI-NE-TA</td><td>54.24 </td><td>50.00 </td><td>55.50 </td><td><strong>60.50</strong></td>
+        <td>RMPI-NE-TA</td><td><strong>54.24</strong> </td><td><strong>50.00</strong></td><td>55.50 </td><td><strong>60.50</strong></strong></td>
     </tr>
 </table>
 
