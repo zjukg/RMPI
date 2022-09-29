@@ -83,7 +83,7 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
 - The schema graph (`Schema-NELL.csv`) and pre-trained embeddings have been attached in the folder `data/external_rel_embeds`. Thanks for the resource from [KZSL](https://github.com/China-UK-ZSL/Resources_for_KZSL).
 
 ## Some Results for Supplementing Main Paper
-1. Entity Prediction on WN18RR.v1
+1. Entity Prediction on WN18RR in the partially inductive KGC.
 
 
 <table>
@@ -136,38 +136,37 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
         <td>RMPI-TA</td><td>56.23 </td><td>52.81 </td><td>57.93 </td><td>58.84 </td><td> 73.68</td><td>72.15 </td><td>73.41 </td><td>73.41 </td>
     </tr>
     <tr>
-        <td>RMPI-NE-TA</td<td> 65.62</td><td>60.08 </td><td>70.08</td><td>73.14 </td><td>77.68 </td><td>74.84 </td><td>79.50 </td><td>81.42 </td>
+        <td>RMPI-NE-TA</td><td>65.62</td><td>60.08 </td><td>70.08</td><td>73.14 </td><td>77.68 </td><td>74.84 </td><td>79.50 </td><td>81.42 </td>
     </tr>
 </table>
 
 
-
-
+2. Entity Prediction on NELL-995.v1 in the partially inductive KGC.
 
 <table>
     <tr>  
-        <th rowspan="2">Method</th><th colspan="4">WN18RR.v3</th><th colspan="4">WN18RR.v4</th>
-    </tr>
-    <tr>  
-       <th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th><th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th>
+        <th rowspan="2">Method</th><th colspan="4">WN18RR.v3</th>
     </tr>
     <tr>
-        <td>TACT-base</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+       <th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th>
     </tr>
     <tr>
-        <td>TACT</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+        <td>TACT-base</td><td>49.76</td><td>44.00 </td><td>53.00 </td><td>56.50</td>
     </tr>
     <tr>
-        <td>RMPI-base</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+        <td>TACT</td><td>47.68 </td><td>43.50 </td><td>48.00 </td><td>51.50 </td>
     </tr>
     <tr>
-        <td>RMPI-NE</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+        <td>RMPI-base</td><td>53.43</td><td>48.00</td><td>57.00 </td><td>59.50</td>
     </tr>
     <tr>
-        <td>RMPI-TA</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+        <td>RMPI-NE</td><td> 54.05</td><td>49.50 </td><td>55.00 </td><td>60.50 </td>
     </tr>
     <tr>
-        <td>RMPI-NE-TA</td<td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+        <td>RMPI-TA</td><td> 48.97</td><td>44.00 </td><td>52.50 </td><td> 53.00</td>
+    </tr>
+    <tr>
+        <td>RMPI-NE-TA</td<td>54.24 </td><td>50.00 </td><td>55.50 </td><td>60.50 </td>
     </tr>
 </table>
 
