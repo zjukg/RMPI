@@ -85,8 +85,9 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
 ## Some Results for Supplementing Main Paper
 1. Entity Prediction on WN18RR.v1
 
-5+|Hits@10|
+
 |Method|MRR|Hits@1|Hits@5|Hits@10|
+5+|Hits@10|
 |----|-----|-----|----|-----|
 |TACT-base|80.62|77.93|82.45|82.45|
 |TACT|79.56|76.33|82.45|82.45|
