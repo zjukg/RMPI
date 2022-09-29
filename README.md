@@ -123,7 +123,6 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
     <tr>
         <td>TACT-base</td><td>54.42</td><td> 50.58 </td><td>57.19 </td><td>58.84 </td><td>73.35 </td><td>72.29 </td><td>73.34 </td><td>73.34 </td>
     </tr>
-    
     <tr>
         <td>TACT</td><td> 54.21</td><td> 50.00</td><td> 57.19</td><td> 58.60</td><td> 73.28</td><td> 72.04</td><td> 73.41</td><td> 73.41</td>
     </tr>
@@ -155,7 +154,6 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
     <tr>
         <td>TACT-base</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
     </tr>
-    
     <tr>
         <td>TACT</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
     </tr>
