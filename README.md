@@ -166,7 +166,7 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
         <td>RMPI-TA</td><td> 48.97</td><td>44.00 </td><td>52.50 </td><td> 53.00</td>
     </tr>
     <tr>
-        <td>RMPI-NE-TA</td<td>54.24 </td><td>50.00 </td><td>55.50 </td><td>60.50 </td>
+        <td>RMPI-NE-TA</td><td>54.24 </td><td>50.00 </td><td>55.50 </td><td>60.50 </td>
     </tr>
 </table>
 
