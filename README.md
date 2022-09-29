@@ -88,16 +88,28 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
 
 <table>
     <tr>  
-        <th rowspan="2">Method</th><th colspan="4">WN18RR.v1</th><th colspan="4">WN18RR.v1</th>
+        <th rowspan="2">Method</th><th colspan="4">WN18RR.v1</th><th colspan="4">WN18RR.v2</th>
     </tr>
     <tr>  
        <th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th><th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th>
     </tr>
     <tr>
-        <td></td><td></td><td></td><td></td><td></td>
+        <td>TACT-base</td><td>80.62</td><td>77.93</td><td>82.45</td><td>82.45</td>
     </tr>
     <tr>
-        <td></td><td></td><td></td><td></td><td></td>
+        <td>TACT</td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td>RMPI-base</td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td>RMPI-NE</td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td>RMPI-TA</td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td>RMPI-NE-TA</td><td></td><td></td><td></td><td></td>
     </tr>
 </table>
 
@@ -106,8 +118,8 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
 |Method||Hits@1|Hits@5|Hits@10|
 5+|Hits@10|
 |----|-----|-----|----|-----|
-|TACT-base|80.62|77.93|82.45|82.45|
-|TACT|79.56|76.33|82.45|82.45|
+||
+||79.56|76.33|82.45|82.45|
 |RMPI-base|79.69|76.60|82.18|82.45|
 |RMPI-NE|81.58|75.53|88.03|89.63|
 |RMPI-TA|69.73|58.51|82.45|82.45|
