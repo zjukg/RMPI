@@ -83,7 +83,7 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
 - The schema graph (`Schema-NELL.csv`) and pre-trained embeddings have been attached in the folder `data/external_rel_embeds`. Thanks for the resource from [KZSL](https://github.com/China-UK-ZSL/Resources_for_KZSL).
 
 ## Some Results for Supplementing Main Paper
-1. Entity Prediction on WN18RR in the partially inductive KGC.
+### 1. Entity Prediction on WN18RR in the partially inductive KGC.
 
 
 <table>
@@ -100,7 +100,7 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
         <td>TACT</td><td>79.56</td><td>76.33</td><td>82.45</td><td>82.45</td><td>78.55</td><td>76.87</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
-        <td>RMPI-base</td><td>79.69</td><td>76.60</td><td>82.18</td><td>82.45</td><td>78.02</td><td>76.53</td><td>78.68</td><td>78.68</td>
+        <td>RMPI-base</td><td>**79.69**</td><td>76.60</td><td>82.18</td><td>82.45</td><td>78.02</td><td>76.53</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
         <td>RMPI-NE</td><td>81.58</td><td>75.53</td><td>88.03</td><td>89.63</td><td>81.07</td><td>78.68</td><td>82.31</td><td>83.22</td>
@@ -141,7 +141,7 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
 </table>
 
 
-2. Entity Prediction on NELL-995.v1 in the partially inductive KGC.
+### 2. Entity Prediction on NELL-995.v1 in the partially inductive KGC.
 
 <table>
     <tr>  
@@ -166,7 +166,7 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
         <td>RMPI-TA</td><td> 48.97</td><td>44.00 </td><td>52.50 </td><td> 53.00</td>
     </tr>
     <tr>
-        <td>RMPI-NE-TA</td><td>54.24 </td><td>50.00 </td><td>55.50 </td><td>60.50 </td>
+        <td>RMPI-NE-TA</td><td>54.24 </td><td>50.00 </td><td>55.50 </td><td><strong>60.50</strong></td>
     </tr>
 </table>
 
