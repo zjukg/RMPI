@@ -89,7 +89,6 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
 <table>
     <tr>  
         <th rowspan="2">Method</th><th colspan="4">WN18RR.v1</th>
-       
     </tr>
     <tr>  
        <th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th>
