@@ -94,33 +94,26 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
        <th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th><th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th>
     </tr>
     <tr>
-        <td>TACT-base</td><td>80.62</td><td>77.93</td><td>82.45</td><td>82.45</td>
+        <td>TACT-base</td><td>80.62</td><td>77.93</td><td>82.45</td><td>82.45</td><td>78.11</td><td>76.76</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
-        <td>TACT</td><td></td><td></td><td></td><td></td>
+        <td>TACT</td><td>79.56</td><td>76.33</td><td>82.45</td><td>82.45</td><td>78.55</td><td>76.87</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
-        <td>RMPI-base</td><td></td><td></td><td></td><td></td>
+        <td>RMPI-base</td><td></td>79.69<td>76.60</td><td>82.18</td><td>82.45</td><td>78.02</td><td>76.53</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
-        <td>RMPI-NE</td><td></td><td></td><td></td><td></td>
+        <td>RMPI-NE</td><td>81.58</td><td>75.53</td><td>88.03</td><td>89.63</td><td>81.07</td><td>78.68</td><td>82.31</td><td>83.22</td>
     </tr>
     <tr>
-        <td>RMPI-TA</td><td></td><td></td><td></td><td></td>
+        <td>RMPI-TA</td><td>69.73</td><td>58.51</td><td>82.45</td><td>82.45</td><td>78.13</td><td>76.76</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
-        <td>RMPI-NE-TA</td><td></td><td></td><td></td><td></td>
+        <td>RMPI-NE-TA</td><td>81.74</td><td>77.13</td><td>86.44</td><td>87.77</td><td>81.34</td><td>79.82</td><td>81.97</td><td>82.43</td>
     </tr>
 </table>
 
 
 
-|Method||Hits@1|Hits@5|Hits@10|
-5+|Hits@10|
-|----|-----|-----|----|-----|
-||
-||79.56|76.33|82.45|82.45|
-|RMPI-base|79.69|76.60|82.18|82.45|
-|RMPI-NE|81.58|75.53|88.03|89.63|
-|RMPI-TA|69.73|58.51|82.45|82.45|
-|RMPI-NE-TA|81.74|77.13|86.44|87.77|
+
+
