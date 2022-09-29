@@ -86,6 +86,13 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
 1. Entity Prediction on WN18RR.v1
 
 
+|===
+|列1|列2|列3
+2+|横向占据2个单元格|cell
+2.2+|横竖均占据2个单元格|cell
+|cell
+|===
+
 |Method|MRR|Hits@1|Hits@5|Hits@10|
 5+|Hits@10|
 |----|-----|-----|----|-----|
