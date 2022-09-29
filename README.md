@@ -81,3 +81,14 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
 ### Pre-training of Ontological schema
 - The pre-training is implemented by running the open codes of TransE provided in [RotatE](https://github.com/DeepGraphLearning/KnowledgeGraphEmbedding) on the schema graph.
 - The schema graph (`Schema-NELL.csv`) and pre-trained embeddings have been attached in the folder `data/external_rel_embeds`. Thanks for the resource from [KZSL](https://github.com/China-UK-ZSL/Resources_for_KZSL).
+
+## Some Results for Supplementing Main Paper
+1. Entity Prediction on WN18RR.v1
+|Method|MRR|Hit@1|Hit@5|Hit@10|
+|----|-----|-----|----|-----|
+|TACT-base|80.62|77.93|82.45|82.45|
+|TACT|79.56|76.33|82.45|82.45|
+|RMPI-base|79.69|76.60|82.18|82.45|
+|RMPI-NE|81.58|75.53|88.03|89.63|
+|RMPI-TA|69.73|58.51|82.45|82.45|
+|RMPI-NE-TA|81.74|77.13|86.44|87.77|
