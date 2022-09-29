@@ -100,7 +100,7 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
         <td>TACT</td><td>79.56</td><td>76.33</td><td>82.45</td><td>82.45</td><td>78.55</td><td>76.87</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
-        <td>RMPI-base</td><td></td>79.69<td>76.60</td><td>82.18</td><td>82.45</td><td>78.02</td><td>76.53</td><td>78.68</td><td>78.68</td>
+        <td>RMPI-base</td><td>79.69</td><td>76.60</td><td>82.18</td><td>82.45</td><td>78.02</td><td>76.53</td><td>78.68</td><td>78.68</td>
     </tr>
     <tr>
         <td>RMPI-NE</td><td>81.58</td><td>75.53</td><td>88.03</td><td>89.63</td><td>81.07</td><td>78.68</td><td>82.31</td><td>83.22</td>
@@ -113,7 +113,63 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
     </tr>
 </table>
 
+<table>
+    <tr>  
+        <th rowspan="2">Method</th><th colspan="4">WN18RR.v3</th><th colspan="4">WN18RR.v4</th>
+    </tr>
+    <tr>  
+       <th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th><th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th>
+    </tr>
+    <tr>
+        <td>TACT-base</td><td>54.42</td><td> 50.58 </td><td>57.19 </td><td>58.84 </td><td>73.35 </td><td>72.29 </td><td>73.34 </td><td>73.34 </td>
+    </tr>
+    
+    <tr>
+        <td>TACT</td><td> 54.21</td><td> 50.00</td><td> 57.19</td><td> 58.60</td><td> 73.28</td><td> 72.04</td><td> 73.41</td><td> 73.41</td>
+    </tr>
+    <tr>
+        <td>RMPI-base</td><td>55.93 </td><td>52.56 </td><td>58.18 </td><td>58.68 </td><td>73.43 </td><td>72.32 </td><td>73.41 </td><td>73.41 </td>
+    </tr>
+    <tr>
+        <td>RMPI-NE</td><td> 64.85</td><td>60.17 </td><td>68.43 </td><td>70.33 </td><td>77.14 </td><td>74.95 </td><td> 78.13</td><td>79.81 </td>
+    </tr>
+    <tr>
+        <td>RMPI-TA</td><td>56.23 </td><td>52.81 </td><td>57.93 </td><td>58.84 </td><td> 73.68</td><td>72.15 </td><td>73.41 </td><td>73.41 </td>
+    </tr>
+    <tr>
+        <td>RMPI-NE-TA</td<td> 65.62</td><td>60.08 </td><td>70.08</td><td>73.14 </td><td>77.68 </td><td>74.84 </td><td>79.50 </td><td>81.42 </td>
+    </tr>
+</table>
 
 
 
+
+
+<table>
+    <tr>  
+        <th rowspan="2">Method</th><th colspan="4">WN18RR.v3</th><th colspan="4">WN18RR.v4</th>
+    </tr>
+    <tr>  
+       <th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th><th>MRR</th><th>Hits@1</th><th>Hit@5</th><th>Hit@10</th>
+    </tr>
+    <tr>
+        <td>TACT-base</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+    </tr>
+    
+    <tr>
+        <td>TACT</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+    </tr>
+    <tr>
+        <td>RMPI-base</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+    </tr>
+    <tr>
+        <td>RMPI-NE</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+    </tr>
+    <tr>
+        <td>RMPI-TA</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+    </tr>
+    <tr>
+        <td>RMPI-NE-TA</td<td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+    </tr>
+</table>
 
