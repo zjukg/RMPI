@@ -194,6 +194,6 @@ Specifically, we use the number of edges in the entity-view subgraph (i.e., the 
         <td>RMPI-TA</td><td>0.036</td><td>0.058</td><td>0.202</td><td>21.311</td>
     </tr>
     <tr>
-        <td>RMPI-TA</td><td>0.053</td><td>0.059</td><td>0.159</td><td>8.539</td>
+        <td>RMPI-NE</td><td>0.053</td><td>0.059</td><td>0.159</td><td>8.539</td>
     </tr>
 </table>
