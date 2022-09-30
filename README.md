@@ -179,7 +179,8 @@ The running time mainly includes the time on subgraph preparation and subgraph p
 Therefore, we count the processing time of different models on subgraphs of different sizes.
 Specifically, we use the number of edges in the entity-view subgraph (i.e., the number of nodes in the transformed relation-view subgraph) to describe the graph size, and run RMPI-base, RMPI-TA and RMPI-NE (with summation-based fusion function) on **CPU** to **test** the triples in the partially inductive setting with subgraph sizes of around *100*, *1000*, *5000* and *20000*. The averaged **inference** time (seconds) are listed as follows.
 
-> 1. Since the model can be trained offline, we mainly concern the model inference time here;  2. Since the subgraph with the size of 20000 lead to out-of-memory problem on our GPU device (*GeForce GTX 1080 with 12GB RAM*), we report the time of inference on CPU (*Intel(R) Xeon(R) Silver 4110 CPU @ 2.10GHz*), the 
+> 1. Since the model can be trained offline, we mainly concern the model inference time here;  
+> 2. Since the subgraphs with the size of 20000 lead to out-of-memory problem on our GPU device (*GeForce GTX 1080 with 12GB RAM*), we report the time of inference on CPU (*Intel(R) Xeon(R) Silver 4110 CPU @ 2.10GHz*), when using GPU, the inference time on graphs with other sizes is slightly less than that using CPU,  in the future, we will test the large-size graphs with GPU.
 <table>
     <tr>  
         <th rowspan="2">Method</th><th colspan="4">Graph Size</th>
@@ -197,5 +198,3 @@ Specifically, we use the number of edges in the entity-view subgraph (i.e., the 
         <td>RMPI-TA</td><td>0.053</td><td>0.059</td><td>0.159</td><td>8.539</td>
     </tr>
 </table>
-
-We can find that \textit{i}) the running time increases as the graph size increases and the complexity of models increases; \textit{ii}) the time gap between RMPI-base and RMPI-TA is greatly enlarged as the graph size increases, especially when the size reaches 20000. In the future, we will test the inference time using GPU.
