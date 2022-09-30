@@ -170,3 +170,32 @@ python TACT/test_auc_F.py -d nell_v2_ind_v3_semi -e nell_v2_TACT_base --ablation
     </tr>
 </table>
 
+
+## Computation Efficiency Analysis
+
+The running time mainly includes the time on subgraph preparation and subgraph prediction. Since the subgraph can be extracted in advance and saved to save running time, we prefer to discuss the computation cost during graph message passing, which is highly relevant to the size of the extracted subgraph.
+
+
+Therefore, we count the processing time of different models on subgraphs of different sizes.
+Specifically, we use the number of edges in the entity-view subgraph (i.e., the number of nodes in the transformed relation-view subgraph) to describe the graph size, and run RMPI-base, RMPI-TA and RMPI-NE (with summation-based fusion function) on **CPU** to **test** the triples in the partially inductive setting with subgraph sizes of around *100*, *1000*, *5000* and *20000*. The averaged **inference** time (seconds) are listed as follows.
+
+> 1. Since the model can be trained offline, we mainly concern the model inference time here;  2. Since the subgraph with the size of 20000 lead to out-of-memory problem on our GPU device (*GeForce GTX 1080 with 12GB RAM*), we report the time of inference on CPU (*Intel(R) Xeon(R) Silver 4110 CPU @ 2.10GHz*), the 
+<table>
+    <tr>  
+        <th rowspan="2">Method</th><th colspan="4">Graph Size</th>
+    </tr>
+    <tr>  
+       <th>100</th><th>1000</th><th>5000</th><th>20000</th>
+    </tr>
+    <tr>
+        <td>RMPI-base</td><td>0.031</td><td>0.053</td><td>0.132</td><td>7.131</td>
+    </tr>
+    <tr>
+        <td>RMPI-TA</td><td>0.036</td><td>0.058</td><td>0.202</td><td>21.311</td>
+    </tr>
+    <tr>
+        <td>RMPI-TA</td><td>0.053</td><td>0.059</td><td>0.159</td><td>8.539</td>
+    </tr>
+</table>
+
+We can find that \textit{i}) the running time increases as the graph size increases and the complexity of models increases; \textit{ii}) the time gap between RMPI-base and RMPI-TA is greatly enlarged as the graph size increases, especially when the size reaches 20000. In the future, we will test the inference time using GPU.
